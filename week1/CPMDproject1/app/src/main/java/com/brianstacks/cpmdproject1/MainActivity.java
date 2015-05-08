@@ -4,42 +4,41 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.brianstacks.cpmdproject1.fragments.InitFragment;
 import com.brianstacks.cpmdproject1.fragments.SignUpFragment;
-import com.parse.FindCallback;
+import com.brianstacks.cpmdproject1.fragments.TextViewFragment;
 import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.util.List;
 
 
-public class MainActivity extends Activity implements SignUpFragment.OnFragmentInteractionListener{
+public class MainActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Required - Initialize the Parse SDK
         Parse.initialize(this);
-
         ParseUser.enableRevocableSessionInBackground();
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.logOut();
+        if (currentUser != null) {
+            FragmentManager mgr = getFragmentManager();
+            FragmentTransaction trans = mgr.beginTransaction();
+            TextViewFragment textViewFragment = new TextViewFragment();
+            trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG);
+            trans.commit();
+        } else {
+            FragmentManager mgr = getFragmentManager();
+            FragmentTransaction trans = mgr.beginTransaction();
+            InitFragment initFragment = new InitFragment();
+            trans.replace(R.id.frag1, initFragment, SignUpFragment.TAG).addToBackStack(SignUpFragment.TAG);
+            trans.commit();
+        }
 
-        FragmentManager mgr = getFragmentManager();
-        FragmentTransaction trans = mgr.beginTransaction();
-        InitFragment initFragment = new InitFragment();
-        trans.replace(R.id.frag1, initFragment, SignUpFragment.TAG).addToBackStack(SignUpFragment.TAG);
-        trans.commit();
     }
 
 
@@ -65,9 +64,4 @@ public class MainActivity extends Activity implements SignUpFragment.OnFragmentI
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onFragmentInteraction(LogInInfo data) {
-        Log.v("LoginData",data.getName());
-
-    }
 }

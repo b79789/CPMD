@@ -16,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="phone"
+        android:digits="0123456789"
         android:hint="Phone number"
         android:ems="10"
         android:id="@+id/phoneNum"/>
@@ -24,5 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="Save Info"/>
+    <Button
+        android:id="@+id/deleteUserInfo"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Delete Account"/>
 
 </LinearLayout>

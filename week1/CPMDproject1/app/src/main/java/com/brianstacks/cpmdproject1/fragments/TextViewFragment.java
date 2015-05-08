@@ -5,44 +5,33 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.brianstacks.cpmdproject1.R;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TextViewFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class TextViewFragment extends Fragment {
-    private static final int LOGIN_REQUEST = 0;
     public static final String TAG = "TextViewFragment.TAG";
-
     private TextView titleTextView;
-    private TextView emailTextView;
-    private TextView nameTextView;
+    private TextView userTextView;
     private TextView favColorTextView;
     private TextView phoneTextView;
-
-    private Button LogoutButton;
     private Button loginButton;
-    private Button editData;
-
 
 
     private ParseUser currentUser;
 
-    // TODO: Rename and change types and number of parameters
-    public static TextViewFragment newInstance(String param1, String param2) {
-        TextViewFragment fragment = new TextViewFragment();
-        return fragment;
+    public static TextViewFragment newInstance() {
+        return new TextViewFragment();
     }
 
     public TextViewFragment() {
@@ -66,15 +55,14 @@ public class TextViewFragment extends Fragment {
     public void onActivityCreated(final Bundle _savedInstanceState) {
         super.onActivityCreated(_savedInstanceState);
         titleTextView = (TextView) getActivity().findViewById(R.id.profile_title);
-        emailTextView = (TextView) getActivity().findViewById(R.id.profile_email);
-        nameTextView = (TextView) getActivity().findViewById(R.id.profile_name);
+        userTextView = (TextView) getActivity().findViewById(R.id.profile_name);
         favColorTextView = (TextView) getActivity().findViewById(R.id.favColorText);
         phoneTextView = (TextView) getActivity().findViewById(R.id.phoneNumberTextView);
-        LogoutButton = (Button) getActivity().findViewById(R.id.logout_button);
+        Button logoutButton = (Button) getActivity().findViewById(R.id.logout_button);
         loginButton = (Button) getActivity().findViewById(R.id.login_button);
-        editData = (Button) getActivity().findViewById(R.id.editData);
+        Button editData = (Button) getActivity().findViewById(R.id.editData);
         loginButton.setVisibility(View.INVISIBLE);
-        titleTextView.setText(R.string.profile_title_logged_in);
+        titleTextView.setText("UserName");
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +72,7 @@ public class TextViewFragment extends Fragment {
                 trans.replace(R.id.frag1, logInFragment, LogInFragment.TAG).addToBackStack(LogInFragment.TAG).commit();
             }
         });
-        LogoutButton.setOnClickListener(new View.OnClickListener() {
+        logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentUser != null) {
@@ -92,12 +80,6 @@ public class TextViewFragment extends Fragment {
                     ParseUser.logOut();
                     currentUser = null;
                     showProfileLoggedOut();
-                } else {
-                    Log.v("hit it again","error");
-                    // User clicked to log in.
-                   /* ParseLoginBuilder loginBuilder = new ParseLoginBuilder(
-                            SampleProfileActivity.this);
-                    startActivityForResult(loginBuilder.build(), LOGIN_REQUEST);*/
                 }
             }
         });
@@ -124,35 +106,29 @@ public class TextViewFragment extends Fragment {
         }
     }
 
-    /**
-     * Shows the profile of the given user.
-     */
-    private void showProfileLoggedIn() {
-        titleTextView.setText(R.string.profile_title_logged_in);
-        emailTextView.setText(currentUser.getUsername());
-        String fullName = currentUser.getString("name");
-        String favColor = currentUser.getString("favColor");
-        String phone = currentUser.getString("phone");
-        Log.v("phone",phone);
-        if (fullName != null) {
-            nameTextView.setText(fullName);
-        }else if (favColor != null){
-            favColorTextView.setText(favColor);
-            phoneTextView.setText(phone);
-        }
-        loginButton.setText(R.string.profile_login_button_label);
-
+    public void showProfileLoggedIn() {
+        titleTextView.setText("UserName");
+        userTextView.setText(currentUser.getUsername());
+        // Syncing Local Changes
+        ParseQuery<ParseObject> localQueryObjects = ParseQuery
+                .getQuery("UserObjects");
+        localQueryObjects.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> userObjects, ParseException e) {
+                for (ParseObject user : userObjects) {
+                    favColorTextView.setText( user.get("favColor").toString());
+                    phoneTextView.setText(String.valueOf(user.getInt("phoneNum")));
+                }
+            }
+        });
+        loginButton.setText("Logout");
     }
 
-    /**
-     * Show a message asking the user to log in, toggle login/logout button text.
-     */
-    private void showProfileLoggedOut() {
-        titleTextView.setText(R.string.profile_title_logged_out+" "+"Please sign in again.");
-        emailTextView.setText("");
-        nameTextView.setText("");
-        LogoutButton.setVisibility(View.INVISIBLE);
-        loginButton.setVisibility(View.VISIBLE);
+
+    public void showProfileLoggedOut() {
+        FragmentManager mgr = getFragmentManager();
+        FragmentTransaction trans = mgr.beginTransaction();
+        LogInFragment logInFragment = new LogInFragment();
+        trans.replace(R.id.frag1, logInFragment, LogInFragment.TAG).addToBackStack(LogInFragment.TAG).commit();
 
     }
 

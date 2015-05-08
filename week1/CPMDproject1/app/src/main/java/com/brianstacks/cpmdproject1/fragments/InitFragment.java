@@ -1,7 +1,6 @@
 package com.brianstacks.cpmdproject1.fragments;
 
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -10,23 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.brianstacks.cpmdproject1.LogInInfo;
 import com.brianstacks.cpmdproject1.R;
 import com.parse.ParseUser;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InitFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class InitFragment extends Fragment {
+    public static final String TAG = "InitFragment.TAG";
 
-    public static InitFragment newInstance() {
-
-        return new InitFragment();
-    }
 
     public InitFragment() {
         // Required empty public constructor

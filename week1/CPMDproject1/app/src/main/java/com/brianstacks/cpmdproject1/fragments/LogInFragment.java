@@ -3,35 +3,31 @@ package com.brianstacks.cpmdproject1.fragments;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.brianstacks.cpmdproject1.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LogInFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class LogInFragment extends Fragment {
     public static final String TAG = "SignUpFragment.TAG";
-
-
-    // TODO: Rename and change types and number of parameters
-    public static LogInFragment newInstance(String param1, String param2) {
-
-        return new LogInFragment();
-    }
+    EditText emailText;
+    EditText passText;
+    CheckBox rememberMeCbx;
+    SharedPreferences loginPreferences;
+    SharedPreferences.Editor loginPrefsEditor;
+    Boolean saveLogin;
 
     public LogInFragment() {
         // Required empty public constructor
@@ -54,16 +50,34 @@ public class LogInFragment extends Fragment {
     public void onActivityCreated(final Bundle _savedInstanceState) {
         super.onActivityCreated(_savedInstanceState);
 
-        final EditText emailText = (EditText)getActivity().findViewById(R.id.editText2SU);
-        final EditText passText = (EditText)getActivity().findViewById(R.id.editText2SU);
+        emailText = (EditText)getActivity().findViewById(R.id.editText2SU);
+        passText = (EditText)getActivity().findViewById(R.id.editText3SU);
+        rememberMeCbx = (CheckBox)getActivity().findViewById(R.id.saveLoginCheckBox);
         Button loginButt =  (Button)getActivity().findViewById(R.id.button);
+        Button createnew = (Button)getActivity().findViewById(R.id.createNew);
+        loginPreferences = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin) {
+            emailText.setText(loginPreferences.getString("username", ""));
+            rememberMeCbx.setChecked(true);
+        }
         loginButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ParseUser.logInInBackground(emailText.getText().toString(), passText.getText().toString(), new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            // Hooray! The user is logged in.
+                            if (rememberMeCbx.isChecked()) {
+                                loginPrefsEditor.putBoolean("saveLogin", true);
+                                loginPrefsEditor.putString("username", emailText.getText().toString());
+                                loginPrefsEditor.apply();
+
+                            } else {
+                                loginPrefsEditor.clear();
+                                loginPrefsEditor.apply();
+
+                            }
                             FragmentManager mgr = getFragmentManager();
                             FragmentTransaction trans = mgr.beginTransaction();
                             TextViewFragment textViewFragment =  new TextViewFragment();
@@ -78,7 +92,18 @@ public class LogInFragment extends Fragment {
                 });
             }
         });
+        createnew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager mgr = getFragmentManager();
+                FragmentTransaction trans = mgr.beginTransaction();
+                SignUpFragment signUpFragment = new SignUpFragment();
+                trans.replace(R.id.frag1, signUpFragment, SignUpFragment.TAG).addToBackStack(SignUpFragment.TAG).commit();
+            }
+        });
 
     }
+
+
 
 }
