@@ -7,7 +7,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -21,10 +21,10 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qVd-2L-8J2">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qVd-2L-8J2">
                                 <rect key="frame" x="37" y="200" width="527" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7bV-2s-enT">
                                 <rect key="frame" x="37" y="38" width="527" height="67"/>
@@ -50,7 +50,8 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Create New"/>
                                 <connections>
-                                    <segue destination="CdI-kw-oVl" kind="presentation" id="Tag-6w-Ky9"/>
+                                    <action selector="onClickSignUp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5tL-OF-LoG"/>
+                                    <segue destination="CdI-kw-oVl" kind="presentation" identifier="Signup1Segue" id="BDT-YH-Q6G"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ay4-DE-KJv">
@@ -60,21 +61,27 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="QYf-vf-lqh" kind="presentation" id="gTU-rF-2YH"/>
+                                    <action selector="onClickLogIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tGo-kq-opB"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.59999999999999998" green="0.80000000000000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="createButton" destination="RKs-rE-hfY" id="KnO-b3-nPw"/>
+                        <outlet property="logInButton" destination="ay4-DE-KJv" id="7pp-yU-Cxa"/>
+                        <outlet property="userName" destination="QvD-nC-qgQ" id="uTl-rd-3kl"/>
+                        <outlet property="userPass" destination="qVd-2L-8J2" id="k9a-pq-yv6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="232" y="25"/>
         </scene>
-        <!--Sign Up View Controller-->
+        <!--SignUpViewController-->
         <scene sceneID="KPL-h4-2mY">
             <objects>
-                <viewController id="CdI-kw-oVl" customClass="SignUpViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignUpViewController" title="SignUpViewController" id="CdI-kw-oVl" customClass="SignUpViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hA0-5v-Odc"/>
                         <viewControllerLayoutGuide type="bottom" id="eyl-T8-4el"/>
@@ -91,33 +98,39 @@
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HEd-O8-6xV">
                                 <rect key="frame" x="36" y="95" width="527" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ah2-2b-0ao">
                                 <rect key="frame" x="37" y="156" width="527" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iXP-Xf-7tT">
                                 <rect key="frame" x="195" y="252" width="208" height="30"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Signup"/>
                                 <connections>
-                                    <segue destination="QYf-vf-lqh" kind="presentation" id="OW4-Dc-ABH"/>
+                                    <action selector="createClick:" destination="CdI-kw-oVl" eventType="touchUpInside" id="R98-Q1-PRS"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.59999999999999998" green="0.80000000000000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="signUpButton" destination="iXP-Xf-7tT" id="eHK-Q5-Ggg"/>
+                        <outlet property="userEmail" destination="HEd-O8-6xV" id="J1X-1H-yFZ"/>
+                        <outlet property="userName" destination="sxL-5m-UHg" id="Zsb-NV-qWg"/>
+                        <outlet property="userPass" destination="ah2-2b-0ao" id="b1y-o1-49y"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wBc-75-klY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="904" y="-82"/>
+            <point key="canvasLocation" x="1012" y="-219"/>
         </scene>
-        <!--Detail View Controller-->
+        <!--DetailViewController-->
         <scene sceneID="smv-01-Tgh">
             <objects>
-                <viewController id="QYf-vf-lqh" customClass="DetailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailViewController" title="DetailViewController" id="QYf-vf-lqh" customClass="DetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ZDk-w1-1w7"/>
                         <viewControllerLayoutGuide type="bottom" id="wDC-zf-Us8"/>
@@ -169,7 +182,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="hrr-77-GUi" kind="presentation" id="MmA-Cy-E3u"/>
+                                    <segue destination="hrr-77-GUi" kind="presentation" identifier="EditSegue" id="MmA-Cy-E3u"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dPp-Ge-zax">
@@ -179,21 +192,28 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="BYZ-38-t0r" kind="presentation" id="YOz-G1-H3y"/>
+                                    <action selector="onLogOut:" destination="QYf-vf-lqh" eventType="touchUpInside" id="EQp-iD-ZAy"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.59999999999999998" green="0.80000000000000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="editUserButton" destination="KD5-SJ-KmS" id="qzv-u8-d2S"/>
+                        <outlet property="userColorLabel" destination="Ml9-pV-mHJ" id="1Gj-5G-8Va"/>
+                        <outlet property="userLogoutButton" destination="dPp-Ge-zax" id="PrR-Xd-JWV"/>
+                        <outlet property="userNameLabel" destination="YXa-Wm-WGo" id="EY8-KN-1N0"/>
+                        <outlet property="userPhoneLabel" destination="iTs-qg-exx" id="J7z-Qg-fSB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DVe-Kf-ZRo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="605" y="784"/>
         </scene>
-        <!--Enter Data View Controller-->
+        <!--EnterDataViewController-->
         <scene sceneID="4As-ql-PNX">
             <objects>
-                <viewController id="hrr-77-GUi" customClass="EnterDataViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EnterDataViewController" title="EnterDataViewController" id="hrr-77-GUi" customClass="EnterDataViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YLq-ZF-dXK"/>
                         <viewControllerLayoutGuide type="bottom" id="Ix8-O8-Zrv"/>
@@ -202,43 +222,42 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Favorite Color" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GJH-RN-8JE">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Favorite Color" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GJH-RN-8JE">
                                 <rect key="frame" x="36" y="40" width="527" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Phone Number" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Zj-Yk-Ub3">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Phone Number" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Zj-Yk-Ub3">
                                 <rect key="frame" x="36" y="95" width="527" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vdh-Wf-44O">
                                 <rect key="frame" x="195" y="252" width="208" height="30"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Save"/>
                                 <connections>
-                                    <segue destination="QYf-vf-lqh" kind="presentation" id="k5a-hS-Iac"/>
+                                    <action selector="enterDataClick:" destination="hrr-77-GUi" eventType="touchUpInside" id="Rqf-LJ-zg2"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XSW-Rk-m3e">
                                 <rect key="frame" x="195" y="318" width="208" height="30"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Delete Account"/>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="presentation" id="vtu-er-MVz"/>
-                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.59999999999999998" green="0.80000000000000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="deleteButton" destination="XSW-Rk-m3e" id="Nnc-Ow-FE7"/>
+                        <outlet property="saveButton" destination="vdh-Wf-44O" id="pOK-4f-lcN"/>
+                        <outlet property="userColor" destination="GJH-RN-8JE" id="c98-qd-wJB"/>
+                        <outlet property="usrPhone" destination="0Zj-Yk-Ub3" id="bOU-73-Woo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fEp-FR-M8H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1422" y="512"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="gTU-rF-2YH"/>
-        <segue reference="vtu-er-MVz"/>
-    </inferredMetricsTieBreakers>
 </document>

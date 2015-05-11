@@ -13,15 +13,38 @@
 @end
 
 @implementation EnterDataViewController
+@synthesize userColor,usrPhone;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(IBAction)enterDataClick:(id)sender{
+    PFQuery *query = [PFQuery queryWithClassName:@"UserObjects"];
+    [query getFirstObjectInBackgroundWithBlock:^ (PFObject *userObject, NSError *error){
+        // Do something with the returned PFObject in the gameScore variable.
+        NSLog(@"%@", userObject);
+        int value 
+        userObject[@"favColor"]=userColor.text;
+        userObject[@"phoneNum"]=usrPhone.text;
+        [userObject saveInBackground];
+        
+    }];
+    
+    DetailViewController *detailViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
+    [detailViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+    [self presentViewController:detailViewController animated:YES completion:nil];
+
+
+
 }
 
 /*

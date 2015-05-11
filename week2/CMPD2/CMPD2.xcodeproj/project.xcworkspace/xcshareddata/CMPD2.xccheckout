@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>35217039-8EEE-4F29-BEF6-EC76A7C817E6</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>CMPD2</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>D33158F57BE55F91E43A9EC769ECB80DED927C65</key>
 		<string>https://github.com/b79789/CPMD.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>week2/CMPD2/CMPD2.xcodeproj/project.xcworkspace</string>
+	<string>week2/CMPD2/CMPD2.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>D33158F57BE55F91E43A9EC769ECB80DED927C65</key>
