@@ -22,5 +22,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *deleteButton;
 
 -(IBAction)enterDataClick:(id)sender;
+-(IBAction)deleteUserClick:(id)sender;
 
 @end

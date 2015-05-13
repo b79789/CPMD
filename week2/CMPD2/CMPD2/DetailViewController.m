@@ -17,10 +17,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.hidesBackButton = YES;
     // Do any additional setup after loading the view.
     PFUser *currentUser = [PFUser currentUser];
-    
-    
+    [[PFUser currentUser] fetchInBackground];
     if (currentUser) {
         // do stuff with the user
         userNameLabel.text= currentUser.username;
@@ -29,16 +29,36 @@
             // Do something with the returned PFObject in the gameScore variable.
             NSLog(@"%@", userObject);
             NSString *strFromInt = [NSString stringWithFormat:@"%@",[userObject objectForKey:@"phoneNum"]];
-            userPhoneLabel.text = strFromInt;
-            userColorLabel.text=[userObject objectForKey:@"favColor"];
+            if (strFromInt == nil) {
+                userPhoneLabel.text = @"Enter Phone Number";
+            }else if ([[userObject objectForKey:@"favColor"] isEqual:@""]){
+                userColorLabel.text=@"Enter your favorite color";
+            }else{
+                userPhoneLabel.text = strFromInt;
+                userColorLabel.text=[userObject objectForKey:@"favColor"];
+            }
+            
             
         }];
+    }
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    PFUser *currentUser = [PFUser currentUser];
+    [[PFUser currentUser] fetchInBackground];
+
+    if (currentUser == nil) {
+        // show the signup screen here....
+        ViewController *VController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
+        [VController setModalPresentationStyle:UIModalPresentationFullScreen];
+        UINavigationController *addViewControl = [[UINavigationController alloc] initWithRootViewController:VController];
+        [self presentViewController:addViewControl animated:YES completion:nil];
+        
         
     } else {
-        // show the signup or login screen
+
     }
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -53,17 +73,12 @@
     NSLog(@"here %@",currentUser);
     ViewController *VController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
     [VController setModalPresentationStyle:UIModalPresentationFullScreen];
-    [self presentViewController:VController animated:YES completion:nil];
+    UINavigationController *addViewControl = [[UINavigationController alloc] initWithRootViewController:VController];
+    [self presentViewController:addViewControl animated:YES completion:nil];
     
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+
+
 
 @end

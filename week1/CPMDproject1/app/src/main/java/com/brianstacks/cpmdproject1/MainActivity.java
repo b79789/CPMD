@@ -59,6 +59,8 @@ public class MainActivity extends Activity{
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if (id == R.id.action_refresh){
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

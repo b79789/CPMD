@@ -28,33 +28,44 @@
 }
 
 -(IBAction)enterDataClick:(id)sender{
+    [[PFUser currentUser]fetchInBackground];
+    if (userColor.text && usrPhone.text.intValue ==0) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle: @"Error"
+                                                       message: @"Do not leave fields blank."
+                                                      delegate: self
+                                             cancelButtonTitle:@"Cancel"
+                                             otherButtonTitles:@"OK",nil];
+        [alert show];
+    }else{
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    f.numberStyle = NSNumberFormatterDecimalStyle;
+    NSNumber *myNumber = [f numberFromString:usrPhone.text];
     PFQuery *query = [PFQuery queryWithClassName:@"UserObjects"];
-    [query getFirstObjectInBackgroundWithBlock:^ (PFObject *userObject, NSError *error){
-        // Do something with the returned PFObject in the gameScore variable.
-        NSLog(@"%@", userObject);
-        int value 
-        userObject[@"favColor"]=userColor.text;
-        userObject[@"phoneNum"]=usrPhone.text;
-        [userObject saveInBackground];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *pfObject,NSError *nserror){
+        pfObject[@"favColor"] = userColor.text;
+        pfObject[@"phoneNum"] = myNumber;
         
+        pfObject.ACL = [PFACL ACLWithUser:[PFUser currentUser]];
+        [pfObject saveInBackground];
     }];
-    
     DetailViewController *detailViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
     [detailViewController setModalPresentationStyle:UIModalPresentationFullScreen];
-    [self presentViewController:detailViewController animated:YES completion:nil];
+        UINavigationController *addViewControl = [[UINavigationController alloc] initWithRootViewController:detailViewController];
+        [self presentViewController:addViewControl animated:YES completion:nil];
 
-
+    }
 
 }
 
-/*
-#pragma mark - Navigation
+-(IBAction)deleteUserClick:(id)sender{
+    PFUser *currentUser = [PFUser currentUser];
+    [currentUser deleteInBackground];
+    ViewController *VController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
+    [VController setModalPresentationStyle:UIModalPresentationFullScreen];
+    UINavigationController *addViewControl = [[UINavigationController alloc] initWithRootViewController:VController];
+    [self presentViewController:addViewControl animated:YES completion:nil];
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+
 }
-*/
 
 @end
