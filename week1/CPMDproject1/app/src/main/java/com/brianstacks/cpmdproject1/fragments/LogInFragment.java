@@ -65,31 +65,37 @@ public class LogInFragment extends Fragment {
         loginButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseUser.logInInBackground(emailText.getText().toString(), passText.getText().toString(), new LogInCallback() {
-                    public void done(ParseUser user, ParseException e) {
-                        if (user != null) {
-                            if (rememberMeCbx.isChecked()) {
-                                loginPrefsEditor.putBoolean("saveLogin", true);
-                                loginPrefsEditor.putString("username", emailText.getText().toString());
-                                loginPrefsEditor.apply();
+                if (emailText.getText().length()==0){
+                    emailText.setError("Must enter email");
+                }else if (passText.getText().length()==0){
+                    passText.setError("Must enter password");
+                }else {
+                    ParseUser.logInInBackground(emailText.getText().toString(), passText.getText().toString(), new LogInCallback() {
+                        public void done(ParseUser user, ParseException e) {
+                            if (user != null) {
+                                if (rememberMeCbx.isChecked()) {
+                                    loginPrefsEditor.putBoolean("saveLogin", true);
+                                    loginPrefsEditor.putString("username", emailText.getText().toString());
+                                    loginPrefsEditor.apply();
 
+                                } else {
+                                    loginPrefsEditor.clear();
+                                    loginPrefsEditor.apply();
+
+                                }
+                                FragmentManager mgr = getFragmentManager();
+                                FragmentTransaction trans = mgr.beginTransaction();
+                                TextViewFragment textViewFragment = new TextViewFragment();
+                                trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
                             } else {
-                                loginPrefsEditor.clear();
-                                loginPrefsEditor.apply();
+                                // Signup failed. Look at the ParseException to see what happened.
+                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
 
                             }
-                            FragmentManager mgr = getFragmentManager();
-                            FragmentTransaction trans = mgr.beginTransaction();
-                            TextViewFragment textViewFragment =  new TextViewFragment();
-                            trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
-                        } else {
-                            // Signup failed. Look at the ParseException to see what happened.
-                            Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
-
-
                         }
-                    }
-                });
+                    });
+                }
             }
         });
         createnew.setOnClickListener(new View.OnClickListener() {

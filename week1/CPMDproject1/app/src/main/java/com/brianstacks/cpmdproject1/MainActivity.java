@@ -3,6 +3,9 @@ package com.brianstacks.cpmdproject1;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,10 +23,10 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Parse.enableLocalDatastore(this);
         Parse.initialize(this);
         ParseUser.enableRevocableSessionInBackground();
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
-
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             FragmentManager mgr = getFragmentManager();
@@ -59,11 +62,18 @@ public class MainActivity extends Activity{
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if (id == R.id.action_refresh){
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    protected boolean isOnline(){
+        ConnectivityManager connectivityManager =(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

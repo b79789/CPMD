@@ -6,6 +6,18 @@
 
 
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="3dp">
+        <Button
+            android:text="Refresh"
+            android:id="@+id/refreshButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
 
             <TextView
                 android:id="@+id/profile_title"

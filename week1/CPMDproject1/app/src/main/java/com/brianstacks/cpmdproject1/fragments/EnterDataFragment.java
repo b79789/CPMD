@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,10 @@ import com.parse.ParseACL;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EnterDataFragment extends Fragment {
@@ -54,6 +58,9 @@ public class EnterDataFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
+        final String[] colors = {"red","white","black","blue","yellow","orange","pink","purple","brown","green","gray"};
+        final String regexStr = "^(?:(?:\\+?1\\s*(?:[.-]\\s*)?)?(?:\\(\\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*\\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\s*(?:[.-]\\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})(?:\\s*(?:#|x\\.?|ext\\.?|extension)\\s*(\\d+))?$";
         tasks=new ArrayList<>();
         colorEnter = (EditText)getActivity().findViewById(R.id.favColor);
         numEnter =(EditText)getActivity().findViewById(R.id.phoneNum);
@@ -64,24 +71,48 @@ public class EnterDataFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ParseObject privateNote = new ParseObject("UserObjects");
                 if (isOnline()){
                     requestData();
-                    int x = (int)Double.parseDouble(numEnter.getText().toString().trim());
-                    ParseObject privateNote = new ParseObject("UserObjects");
-                    privateNote.put("favColor", colorEnter.getText().toString());
-                    privateNote.put("phoneNum",x);
-                    privateNote.setACL(new ParseACL(ParseUser.getCurrentUser()));
-                    privateNote.saveInBackground();
-                    FragmentManager mgr = getFragmentManager();
-                    FragmentTransaction trans = mgr.beginTransaction();
-                    TextViewFragment textViewFragment =  new TextViewFragment();
-                    trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
+                    if (!Arrays.asList(colors).contains(colorEnter.getText().toString().toLowerCase())){
+                        colorEnter.setError("Enter Valid Color ie:'Red'");
+                    }else if (!numEnter.getText().toString().trim().matches(regexStr)){
+                        numEnter.setError("Enter Valid Phone Number");
+                    }else {
+                        int x = (int)Double.parseDouble(numEnter.getText().toString().trim());
+                        privateNote.put("favColor", colorEnter.getText().toString());
+                        privateNote.put("phoneNum",x);
+                        privateNote.setACL(new ParseACL(ParseUser.getCurrentUser()));
+                        privateNote.saveInBackground();
+                        FragmentManager mgr = getFragmentManager();
+                        FragmentTransaction trans = mgr.beginTransaction();
+                        TextViewFragment textViewFragment =  new TextViewFragment();
+                        trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
+
+                    }
+
                 }else {
-                    Toast.makeText(getActivity(),"Network isn't avalaible",Toast.LENGTH_LONG).show();
+                    if (!Arrays.asList(colors).contains(colorEnter.getText().toString().toLowerCase())){
+                        colorEnter.setError("Enter Valid Color ie:'Red'");
+                    }else if (!numEnter.getText().toString().trim().matches(regexStr)){
+                        numEnter.setError("Enter Valid Phone Number");
+                    }else {
+                    Toast.makeText(getActivity(),"Network isn't available ",Toast.LENGTH_LONG).show();
+                        int x = (int)Double.parseDouble(numEnter.getText().toString().trim());
+                        privateNote.put("favColor", colorEnter.getText().toString());
+                        privateNote.put("phoneNum",x);
+                        privateNote.setACL(new ParseACL(ParseUser.getCurrentUser()));
+                        privateNote.saveEventually();
+                        FragmentManager mgr = getFragmentManager();
+                        FragmentTransaction trans = mgr.beginTransaction();
+                        TextViewFragment textViewFragment =  new TextViewFragment();
+                        trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
                 }
 
+                }
             }
         });
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

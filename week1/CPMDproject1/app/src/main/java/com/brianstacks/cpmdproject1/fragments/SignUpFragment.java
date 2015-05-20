@@ -1,9 +1,7 @@
 package com.brianstacks.cpmdproject1.fragments;
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import com.brianstacks.cpmdproject1.R;
 import com.parse.ParseACL;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SignUpFragment extends Fragment {
@@ -42,49 +41,22 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onActivityCreated(final Bundle _savedInstanceState) {
         super.onActivityCreated(_savedInstanceState);
-        Button signUp = (Button)getActivity().findViewById(R.id.button);
+        Button signUp = (Button) getActivity().findViewById(R.id.button);
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText e1 = (EditText)getActivity().findViewById(R.id.editText);
-                EditText e2 = (EditText)getActivity().findViewById(R.id.editText2);
-                EditText e3 = (EditText)getActivity().findViewById(R.id.editText3);
+                EditText e1 = (EditText) getActivity().findViewById(R.id.editText);
+                final EditText e2 = (EditText) getActivity().findViewById(R.id.editText2);
+                EditText e3 = (EditText) getActivity().findViewById(R.id.editText3);
 
 
-                if (e1.getText().toString().equals("")){
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                    builder1.setMessage("Must enter Name");
-                    builder1.setPositiveButton("Exit",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                }else if (e2.getText().toString().equals("")) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                    builder1.setMessage("Must enter Email");
-                    builder1.setPositiveButton("Exit",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                }else if (e3.getText().toString().equals("")){
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                    builder1.setMessage("Must enter Password");
-                    builder1.setPositiveButton("Exit",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                }else {
+                if (e1.getText().toString().equals("")) {
+                    e1.setError("Must enter Name");
+                } else if (e2.getText().length() == 0 && isValid(e2.getText().toString())) {
+                    e2.setError("Must enter valid Email");
+                } else if (e3.getText().toString().equals("")) {
+                    e3.setError("Must enter password");
+                } else {
                     ParseUser user = new ParseUser();
                     user.setUsername(e1.getText().toString());
                     user.setPassword(e3.getText().toString());
@@ -102,23 +74,25 @@ public class SignUpFragment extends Fragment {
                                 // Hooray! Let them use the app now.
                                 FragmentManager mgr = getFragmentManager();
                                 FragmentTransaction trans = mgr.beginTransaction();
-                                TextViewFragment textViewFragment =  TextViewFragment.newInstance();
+                                TextViewFragment textViewFragment = TextViewFragment.newInstance();
                                 trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
                             } else {
                                 // Sign up didn't succeed. Look at the ParseException
                                 // to figure out what went wrong
-                                Toast.makeText(getActivity(),"error*"+ e.toString(),Toast.LENGTH_SHORT).show();
+                                e2.setError("Must enter valid Email");
                             }
                         }
                     });
-
                 }
             }
         });
-
-
-
     }
 
+    public static boolean isValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 
 }
