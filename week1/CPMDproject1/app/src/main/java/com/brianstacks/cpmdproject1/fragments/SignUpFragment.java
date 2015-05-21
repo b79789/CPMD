@@ -1,12 +1,15 @@
 package com.brianstacks.cpmdproject1.fragments;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import com.brianstacks.cpmdproject1.R;
@@ -71,6 +74,7 @@ public class SignUpFragment extends Fragment {
                         @Override
                         public void done(com.parse.ParseException e) {
                             if (e == null) {
+                                hideKeyboard(getActivity());
                                 // Hooray! Let them use the app now.
                                 FragmentManager mgr = getFragmentManager();
                                 FragmentTransaction trans = mgr.beginTransaction();
@@ -95,4 +99,15 @@ public class SignUpFragment extends Fragment {
         return matcher.matches();
     }
 
+    public static void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
 }

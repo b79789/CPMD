@@ -1,15 +1,19 @@
 package com.brianstacks.cpmdproject1.fragments;
 
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -53,8 +57,8 @@ public class LogInFragment extends Fragment {
         emailText = (EditText)getActivity().findViewById(R.id.editText2SU);
         passText = (EditText)getActivity().findViewById(R.id.editText3SU);
         rememberMeCbx = (CheckBox)getActivity().findViewById(R.id.saveLoginCheckBox);
-        Button loginButt =  (Button)getActivity().findViewById(R.id.button);
-        Button createnew = (Button)getActivity().findViewById(R.id.createNew);
+        final Button loginButt =  (Button)getActivity().findViewById(R.id.button);
+        final Button createnew = (Button)getActivity().findViewById(R.id.createNew);
         loginPreferences = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
@@ -62,54 +66,99 @@ public class LogInFragment extends Fragment {
             emailText.setText(loginPreferences.getString("username", ""));
             rememberMeCbx.setChecked(true);
         }
+
         loginButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (emailText.getText().length()==0){
-                    emailText.setError("Must enter email");
-                }else if (passText.getText().length()==0){
-                    passText.setError("Must enter password");
-                }else {
-                    ParseUser.logInInBackground(emailText.getText().toString(), passText.getText().toString(), new LogInCallback() {
-                        public void done(ParseUser user, ParseException e) {
-                            if (user != null) {
-                                if (rememberMeCbx.isChecked()) {
-                                    loginPrefsEditor.putBoolean("saveLogin", true);
-                                    loginPrefsEditor.putString("username", emailText.getText().toString());
-                                    loginPrefsEditor.apply();
+                if (!isOnline()) {
 
+                            Toast.makeText(getActivity(), "Need Network Connection", Toast.LENGTH_SHORT).show();
+                            FragmentManager mgr = getFragmentManager();
+                            FragmentTransaction trans = mgr.beginTransaction();
+                            LogInFragment logInFragment = new LogInFragment();
+                            trans.replace(R.id.frag1, logInFragment, LogInFragment.TAG).addToBackStack(LogInFragment.TAG).commit();
+
+
+                } else {
+                    if (emailText.getText().length() == 0) {
+                        emailText.setError("Must enter email");
+                    } else if (passText.getText().length() == 0) {
+                        passText.setError("Must enter password");
+                    } else {
+                        ParseUser.logInInBackground(emailText.getText().toString(), passText.getText().toString(), new LogInCallback() {
+                            public void done(ParseUser user, ParseException e) {
+                                if (user != null) {
+                                    if (rememberMeCbx.isChecked()) {
+                                        loginPrefsEditor.putBoolean("saveLogin", true);
+                                        loginPrefsEditor.putString("username", emailText.getText().toString());
+                                        loginPrefsEditor.apply();
+
+                                    } else {
+                                        loginPrefsEditor.clear();
+                                        loginPrefsEditor.apply();
+
+                                    }
+                                    hideKeyboard(getActivity());
+                                    FragmentManager mgr = getFragmentManager();
+                                    FragmentTransaction trans = mgr.beginTransaction();
+                                    TextViewFragment textViewFragment = new TextViewFragment();
+                                    trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
                                 } else {
-                                    loginPrefsEditor.clear();
-                                    loginPrefsEditor.apply();
+                                    // Signup failed. Look at the ParseException to see what happened.
+                                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
 
                                 }
-                                FragmentManager mgr = getFragmentManager();
-                                FragmentTransaction trans = mgr.beginTransaction();
-                                TextViewFragment textViewFragment = new TextViewFragment();
-                                trans.replace(R.id.frag1, textViewFragment, TextViewFragment.TAG).addToBackStack(TextViewFragment.TAG).commit();
-                            } else {
-                                // Signup failed. Look at the ParseException to see what happened.
-                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-
-
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         });
         createnew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager mgr = getFragmentManager();
-                FragmentTransaction trans = mgr.beginTransaction();
-                SignUpFragment signUpFragment = new SignUpFragment();
-                trans.replace(R.id.frag1, signUpFragment, SignUpFragment.TAG).addToBackStack(SignUpFragment.TAG).commit();
+                if (!isOnline()) {
+
+                            Toast.makeText(getActivity(), "Need Network Connection", Toast.LENGTH_SHORT).show();
+                            FragmentManager mgr = getFragmentManager();
+                            FragmentTransaction trans = mgr.beginTransaction();
+                            LogInFragment logInFragment = new LogInFragment();
+                            trans.replace(R.id.frag1, logInFragment, LogInFragment.TAG).addToBackStack(LogInFragment.TAG).commit();
+
+
+                } else {
+                    FragmentManager mgr = getFragmentManager();
+                    FragmentTransaction trans = mgr.beginTransaction();
+                    SignUpFragment signUpFragment = new SignUpFragment();
+                    trans.replace(R.id.frag1, signUpFragment, SignUpFragment.TAG).addToBackStack(SignUpFragment.TAG).commit();
+                }
             }
         });
 
     }
 
 
+    protected boolean isOnline(){
+        ConnectivityManager connectivityManager =(ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
 
 }

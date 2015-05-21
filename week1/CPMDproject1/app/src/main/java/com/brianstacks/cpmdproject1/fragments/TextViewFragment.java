@@ -1,32 +1,29 @@
 package com.brianstacks.cpmdproject1.fragments;
 
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.brianstacks.cpmdproject1.R;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 
 public class TextViewFragment extends Fragment {
@@ -37,8 +34,6 @@ public class TextViewFragment extends Fragment {
      TextView phoneTextView;
      Button loginButton;
      Button refreshButt;
-
-
 
     private ParseUser currentUser;
 
@@ -53,6 +48,7 @@ public class TextViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -65,7 +61,10 @@ public class TextViewFragment extends Fragment {
     @Override
     public void onActivityCreated(final Bundle _savedInstanceState) {
         super.onActivityCreated(_savedInstanceState);
-        offlineUpdate();
+        hideKeyboard(getActivity());
+        if (!isOnline()){
+            offlineUpdate();
+        }
         titleTextView = (TextView) getActivity().findViewById(R.id.profile_title);
         userTextView = (TextView) getActivity().findViewById(R.id.profile_name);
         favColorTextView = (TextView) getActivity().findViewById(R.id.favColorText);
@@ -76,6 +75,7 @@ public class TextViewFragment extends Fragment {
         loginButton.setVisibility(View.INVISIBLE);
         refreshButt = (Button) getActivity().findViewById(R.id.refreshButton);
         titleTextView.setText("UserName");
+
         refreshButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +84,7 @@ public class TextViewFragment extends Fragment {
                 }else {
                     Toast.makeText(getActivity(),"Network isn't available ",Toast.LENGTH_LONG).show();
                     offlineUpdate();
+
                 }
 
             }
@@ -119,20 +120,27 @@ public class TextViewFragment extends Fragment {
         });
     }
 
+
+
     public void offlineUpdate() {
+
+
         // Syncing Local Changes
         ParseQuery<ParseObject> localQueryObjects = ParseQuery.getQuery("UserObjects");
         localQueryObjects.fromLocalDatastore();
-        localQueryObjects.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                if (parseObject != null) {
-                    favColorTextView.setText( parseObject.get("favColor").toString());
-                    phoneTextView.setText(String.valueOf(parseObject.getInt("phoneNum")));
+        localQueryObjects.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> userObjects, ParseException e) {
+                if (userObjects!= null){
+                    for (ParseObject user : userObjects) {
 
-                } else {
-                    Toast.makeText(getActivity(), "Data Not Available ", Toast.LENGTH_LONG).show();
+                        favColorTextView.setText( user.get("favColor").toString());
+                        phoneTextView.setText(String.valueOf(user.getLong("phoneNum")));
+                    }
+                }else {
+                    Toast.makeText(getActivity(), "Data isn't available ", Toast.LENGTH_LONG).show();
+
                 }
+
             }
         });
     }
@@ -160,6 +168,19 @@ public class TextViewFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        hideKeyboard(getActivity());
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        hideKeyboard(getActivity());
+
+
+    }
 
     public void showProfileLoggedIn() {
         titleTextView.setText("UserName");
@@ -177,7 +198,7 @@ public class TextViewFragment extends Fragment {
                 if (userObjects!= null){
                     for (ParseObject user : userObjects) {
                         favColorTextView.setText( user.get("favColor").toString());
-                        phoneTextView.setText(String.valueOf(user.getInt("phoneNum")));
+                        phoneTextView.setText(String.valueOf(user.getLong("phoneNum")));
                     }
                 }else {
                     Toast.makeText(getActivity(),"Network isn't available ",Toast.LENGTH_LONG).show();
@@ -196,6 +217,20 @@ public class TextViewFragment extends Fragment {
         trans.replace(R.id.frag1, logInFragment, LogInFragment.TAG).addToBackStack(LogInFragment.TAG).commit();
 
     }
+
+
+    public static void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
 
 
 }

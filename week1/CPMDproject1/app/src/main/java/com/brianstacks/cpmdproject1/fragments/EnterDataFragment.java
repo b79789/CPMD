@@ -1,5 +1,6 @@
 package com.brianstacks.cpmdproject1.fragments;
 
+import android.app.Application;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ import com.parse.ParseUser;
 
 import org.json.JSONArray;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +74,8 @@ public class EnterDataFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 ParseObject privateNote = new ParseObject("UserObjects");
                 if (isOnline()){
                     requestData();
@@ -79,7 +84,9 @@ public class EnterDataFragment extends Fragment {
                     }else if (!numEnter.getText().toString().trim().matches(regexStr)){
                         numEnter.setError("Enter Valid Phone Number");
                     }else {
-                        int x = (int)Double.parseDouble(numEnter.getText().toString().trim());
+                        String myNumber = numEnter.getText().toString().trim();
+                        Long x = Long.decode(myNumber);
+                        Log.v("int x =", String.valueOf(x));
                         privateNote.put("favColor", colorEnter.getText().toString());
                         privateNote.put("phoneNum",x);
                         privateNote.setACL(new ParseACL(ParseUser.getCurrentUser()));
@@ -98,7 +105,8 @@ public class EnterDataFragment extends Fragment {
                         numEnter.setError("Enter Valid Phone Number");
                     }else {
                     Toast.makeText(getActivity(),"Network isn't available ",Toast.LENGTH_LONG).show();
-                        int x = (int)Double.parseDouble(numEnter.getText().toString().trim());
+                        String myNumber = numEnter.getText().toString().trim();
+                        Long x = Long.decode(myNumber);
                         privateNote.put("favColor", colorEnter.getText().toString());
                         privateNote.put("phoneNum",x);
                         privateNote.setACL(new ParseACL(ParseUser.getCurrentUser()));
@@ -120,8 +128,8 @@ public class EnterDataFragment extends Fragment {
                 user.deleteInBackground();
                 FragmentManager mgr = getFragmentManager();
                 FragmentTransaction trans = mgr.beginTransaction();
-                InitFragment initFragment =  new InitFragment();
-                trans.replace(R.id.frag1, initFragment, InitFragment.TAG).commit();
+                LogInFragment initFragment =  new LogInFragment();
+                trans.replace(R.id.frag1, initFragment, LogInFragment.TAG).commit();
 
             }
         });
