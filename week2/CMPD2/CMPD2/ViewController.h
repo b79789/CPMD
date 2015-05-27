@@ -22,7 +22,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *createButton;
 @property (strong, nonatomic) IBOutlet UISwitch *mySwitch;
 
--(IBAction)onClickSignUp:(id)sender;
+
 -(IBAction)onClickLogIn:(id)sender;
 - (IBAction)btnSwitched:(id)sender;
 

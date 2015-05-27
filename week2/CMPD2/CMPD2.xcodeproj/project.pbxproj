@@ -35,6 +35,7 @@
 		38A35B8E1AFC35DC00ABDDDA /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A35B8D1AFC35DC00ABDDDA /* SignUpViewController.m */; };
 		38A35B911AFC360700ABDDDA /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A35B901AFC360700ABDDDA /* DetailViewController.m */; };
 		38A35B941AFC361700ABDDDA /* EnterDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A35B931AFC361700ABDDDA /* EnterDataViewController.m */; };
+		38CF1D971B0F67FD0037E8B5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 38CF1D961B0F67FD0037E8B5 /* Reachability.m */; };
 		38FDA90D1B00D696009DFD28 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38FDA90B1B00D696009DFD28 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +87,8 @@
 		38A35B901AFC360700ABDDDA /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		38A35B921AFC361700ABDDDA /* EnterDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnterDataViewController.h; sourceTree = "<group>"; };
 		38A35B931AFC361700ABDDDA /* EnterDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnterDataViewController.m; sourceTree = "<group>"; };
+		38CF1D951B0F67FD0037E8B5 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		38CF1D961B0F67FD0037E8B5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		38FDA90C1B00D696009DFD28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -148,6 +151,8 @@
 		38A35B3B1AFBE2FB00ABDDDA /* CMPD2 */ = {
 			isa = PBXGroup;
 			children = (
+				38CF1D951B0F67FD0037E8B5 /* Reachability.h */,
+				38CF1D961B0F67FD0037E8B5 /* Reachability.m */,
 				38A35B401AFBE2FC00ABDDDA /* AppDelegate.h */,
 				38A35B411AFBE2FC00ABDDDA /* AppDelegate.m */,
 				38A35B431AFBE2FC00ABDDDA /* ViewController.h */,
@@ -329,6 +334,7 @@
 				38A35B911AFC360700ABDDDA /* DetailViewController.m in Sources */,
 				38A35B451AFBE2FC00ABDDDA /* ViewController.m in Sources */,
 				38A35B421AFBE2FC00ABDDDA /* AppDelegate.m in Sources */,
+				38CF1D971B0F67FD0037E8B5 /* Reachability.m in Sources */,
 				38A35B8E1AFC35DC00ABDDDA /* SignUpViewController.m in Sources */,
 				38A35B3F1AFBE2FC00ABDDDA /* main.m in Sources */,
 				38A35B941AFC361700ABDDDA /* EnterDataViewController.m in Sources */,

@@ -21,6 +21,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *userPhoneLabel;
 @property (strong, nonatomic) IBOutlet UIButton *editUserButton;
 @property (strong, nonatomic) IBOutlet UIButton *userLogoutButton;
-
+-(IBAction)refreshData:(id)sender;
 -(IBAction)onLogOut:(id)sender;
 @end
